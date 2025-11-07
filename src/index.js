@@ -1,13 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import db from './db.js';
-    import { fileURLToPath } from 'url';
-    import { dirname } from 'path';
+    // import { fileURLToPath } from 'url';
+    // import { dirname } from 'path';
 
 
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    console.log(__dirname);
+    // const __filename = fileURLToPath(import.meta.url);
+    // const __dirname = dirname(__filename);
+    // console.log(__dirname);
 
 
 
@@ -37,10 +37,17 @@ app.get("/api/user", (req, res) => {
 //get user by parameter
 app.get("/api/user/:id", (req, res) => {
   const para = req.params.id;
-  db.query('select * from users where id = ?', [para],(err, data))
+  db.query('select * from users where id = ?', [para], (err , data) => {
+        if (err) {
+          res.console.log(err);
+          res.status(500).json({ message: "Database error" });
+          throw err;
+        };
+    res.json(data);
+  });
   // const user = sql.find((u) => u.id === parseInt(req.params.id));
-  if (!data) return res.status(404).json({ message: "User not found" });
-  res.json(data);
+  // if (!data) return res.status(404).json({ message: "User not found" });
+  // res.json(data);
 });
 
 app.post("/api/user", (req, res) => {
